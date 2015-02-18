@@ -5,7 +5,7 @@ object TodoScript {
   import scala.io.Source
   import java.io.{PrintWriter, File}
 
-  val DATABASE_FILE = "todo.txt"
+  val DATABASE_FILE = "/Users/sjumilli/shellscripts/todo.txt"//todo (yes, I see the irony..:)
 
   case class Todo(text: String) {
     override def toString = text
