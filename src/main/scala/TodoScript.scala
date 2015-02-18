@@ -1,19 +1,22 @@
 import scala.util.Try
+import scala.io.Source
+import java.io.{PrintWriter, File}
 
 object TodoScript {
-
-  import scala.io.Source
-  import java.io.{PrintWriter, File}
-
-  val DATABASE_FILE = "/Users/sjumilli/shellscripts/todo.txt"//todo (yes, I see the irony..:)
 
   case class Todo(text: String) {
     override def toString = text
   }
 
   def main(args: Array[String]) {
-    val todos = loadTodos(DATABASE_FILE)
-    inputPrintLoop(todos)
+    var databaseFile = "/home/sjur/shellscripts/todo.db"
+    if (args.size > 0 && !args(0).isEmpty && !args(0).equals("")) {
+      databaseFile = args(0)
+    }
+    val todos = loadTodos(databaseFile)
+    val newTodos = inputPrintLoop(todos)
+    write(newTodos, databaseFile)
+    System.exit(0)
   }
 
   private def write(todos: List[Todo], file: String): Unit = {
@@ -25,13 +28,12 @@ object TodoScript {
     }
   }
 
-  private def inputPrintLoop(todos: List[Todo]) {
+  private def inputPrintLoop(todos: List[Todo]): List[Todo] = {
     printTodo(todos)
     val input: Either[Int, String] = readInput
     val newTodos = process(input, todos)
-    write(newTodos, DATABASE_FILE)
     printTodo(newTodos)
-    System.exit(0)
+    newTodos
   }
 
   def add(s: String, todos: List[Todo]): List[Todo] = {
